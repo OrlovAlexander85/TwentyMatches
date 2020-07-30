@@ -6,4 +6,5 @@ public class Main {
         MatchesGame game = new MatchesGame(20);
         game.run();
     }
+
 }
