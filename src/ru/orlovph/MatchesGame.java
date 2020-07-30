@@ -1,27 +1,39 @@
 package ru.orlovph;
 
 
-import java.io.Console;
 import java.util.Scanner;
 
 public class MatchesGame {
+    private boolean isComputerTurn;
     private int numberOfMatchesOnTable;
 
     // мы реально хотим создавать каждый раз  новый сканер, тяжелый объект внутри метода?
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner;
 
     public MatchesGame(int numberOfMatchesOnTable) {
         this.numberOfMatchesOnTable = numberOfMatchesOnTable;
     }
 
     public void run() {
-        boolean isComputerTurn = true;
+        prepareGame();
+
         showStatusToPlayer();
         while (!isGameOver()) {
             makeMove(isComputerTurn);
             showStatusToPlayer();
             isComputerTurn = !isComputerTurn;
         }
+
+        closeGame();
+    }
+
+    private void prepareGame() {
+        isComputerTurn = true;
+        scanner = new Scanner(System.in);
+    }
+
+    private void closeGame() {
+        scanner.close();
     }
 
     private void makeMove(boolean isComputerTurn) {
@@ -44,6 +56,7 @@ public class MatchesGame {
         }
     }
 
+    // makes 3 actions: calculate the move, display computer decision, make move
     private void makeComputerMove() {
         int currentAIMove;
         final int i = numberOfMatchesOnTable % 4;
