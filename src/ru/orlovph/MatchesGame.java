@@ -15,45 +15,46 @@ public class MatchesGame {
 
     public void run() {
         while (!isGameOver()) {
-            printStatus();
-            AImove(numberOfMatchesOnTable);
+            showStatusToPlayer();
+            makeComputerMove();
             if (isGameOver()) {
                 break;
             }
-            printStatus();
-            playerInput();
+            showStatusToPlayer();
+            makePlayerMove();
         }
     }
 
     private boolean isGameOver() {
+        return numberOfMatchesOnTable == 1;
+    }
+
+    private void showStatusToPlayer() {
         if (numberOfMatchesOnTable == 1) {
-            // сайд эффект, метод делает 2 действия вместо 1 заявленного
             System.out.println("Для игрока осталась последняя спичка. Игрок проиграл!");
-            return true;
         } else {
-            return false;
+            System.out.println("На столе осталось " + numberOfMatchesOnTable + " спичек");
         }
-        // правильный вариант метода
-        // return numberOfMatchesOnTable != 1;
     }
 
-    private void printStatus() {
-        System.out.println("На столе осталось " + numberOfMatchesOnTable + " спичек");
-    }
-
-    private void AImove(int matchesOnTable) {
+    // тут нет AI, это просто ход компьютера. Он может быть и по AI и по алгоритму, который
+    // не считается AI
+    private void makeComputerMove() {
         int currentAIMove;
-        if (matchesOnTable % 4 == 0) {
+        final int i = numberOfMatchesOnTable % 4;
+        if (i == 0) {
             currentAIMove = 3;
-        } else if (matchesOnTable % 4 == 3) {
+        } else if (i == 3) {
             currentAIMove = 2;
-        } else currentAIMove = 1;
+        } else {
+            currentAIMove = 1;
+        }
         System.out.println(" - Количество выбранных компьютером спичек = " + currentAIMove);
         numberOfMatchesOnTable -= currentAIMove;
     }
 
     // метод делает 2 действия + название неконсистентно с ходом компьютера
-    private void playerInput() {
+    private void makePlayerMove() {
         System.out.print(" - Ход Игрока. Введите количество спичек: ");
         int playerMove;
         Scanner scanner = new Scanner(System.in);
@@ -61,15 +62,15 @@ public class MatchesGame {
             playerMove = scanner.nextInt();
             if (playerMove < 1 || playerMove > 3) {
                 System.out.println("Некорректное количество спичек!");
-                printStatus();
-                playerInput();
+                showStatusToPlayer();
+                makePlayerMove();
             } else {
                 numberOfMatchesOnTable -= playerMove;
             }
         } catch (Exception e) {
             System.out.println("Некорректное количество спичек!");
-            printStatus();
-            playerInput();
+            showStatusToPlayer();
+            makePlayerMove();
         }
     }
 }
