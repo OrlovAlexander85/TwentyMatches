@@ -1,17 +1,22 @@
-package ru.orlovph;
+package ru.orlovph.game;
 
 
 import java.util.Scanner;
 
+import ru.orlovph.ai.IDecisionMaker;
+import ru.orlovph.presentation.Displayer;
+
 public class MatchesGame {
     private boolean isComputerTurn;
     private int numberOfMatchesOnTable;
+    private IDecisionMaker dm;
+    private Displayer displayer = new Displayer();
 
-    // мы реально хотим создавать каждый раз  новый сканер, тяжелый объект внутри метода?
     Scanner scanner;
 
-    public MatchesGame(int numberOfMatchesOnTable) {
+    public MatchesGame(int numberOfMatchesOnTable, IDecisionMaker dm) {
         this.numberOfMatchesOnTable = numberOfMatchesOnTable;
+        this.dm = dm;
     }
 
     public void run() {
@@ -50,23 +55,14 @@ public class MatchesGame {
 
     private void showStatusToPlayer() {
         if (isGameOver()) {
-            System.out.println("Для игрока осталась последняя спичка. Игрок проиграл!");
+            displayer.displayGameOver();
         } else {
             System.out.println("На столе осталось " + numberOfMatchesOnTable + " спичек");
         }
     }
 
-    // makes 3 actions: calculate the move, display computer decision, make move
     private void makeComputerMove() {
-        int currentAIMove;
-        final int i = numberOfMatchesOnTable % 4;
-        if (i == 0) {
-            currentAIMove = 3;
-        } else if (i == 3) {
-            currentAIMove = 2;
-        } else {
-            currentAIMove = 1;
-        }
+        int currentAIMove = dm.calculateMove(numberOfMatchesOnTable);
         System.out.println(" - Количество выбранных компьютером спичек = " + currentAIMove);
         numberOfMatchesOnTable -= currentAIMove;
     }
@@ -79,10 +75,10 @@ public class MatchesGame {
     private int getPlayerMove() {
         int playerMove = 0;
         do {
-            System.out.print(" - Ход Игрока. Введите количество спичек: ");
+            displayer.displayPlayerMove();
             playerMove = readIntFromConsole();
             if (!isValidPlayerInput(playerMove)) {
-                System.out.println("Некорректное количество спичек!");
+                displayer.displayError();
             } else {
                 break;
             }
@@ -93,7 +89,7 @@ public class MatchesGame {
     private int readIntFromConsole() {
         int playerMove;
         while (!scanner.hasNextInt()) {
-            System.out.println("Некорректное количество спичек!");
+            displayer.displayError();
             System.out.print(" - Ход Игрока. Введите количество спичек: ");
             scanner.next();
         }
