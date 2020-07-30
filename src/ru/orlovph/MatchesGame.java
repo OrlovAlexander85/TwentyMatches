@@ -3,14 +3,21 @@ package ru.orlovph;
 
 import java.util.Scanner;
 
-public class TwentyMatchesTheGame {
-    int numberOfMatchesOnTable = 20;
+public class MatchesGame {
+    private int numberOfMatchesOnTable = 20;
 
-    public void runTheGame() {
-        while (!GameIsOver()) {
+    public MatchesGame() {
+    }
+
+    public MatchesGame(int numberOfMatchesOnTable) {
+        this.numberOfMatchesOnTable = numberOfMatchesOnTable;
+    }
+
+    public void run() {
+        while (!isGameOver()) {
             printStatus();
             AImove(numberOfMatchesOnTable);
-            if (GameIsOver()) {
+            if (isGameOver()) {
                 break;
             }
             printStatus();
@@ -18,13 +25,16 @@ public class TwentyMatchesTheGame {
         }
     }
 
-    private boolean GameIsOver() {
+    private boolean isGameOver() {
         if (numberOfMatchesOnTable == 1) {
+            // сайд эффект, метод делает 2 действия вместо 1 заявленного
             System.out.println("Для игрока осталась последняя спичка. Игрок проиграл!");
             return true;
         } else {
             return false;
         }
+        // правильный вариант метода
+        // return numberOfMatchesOnTable != 1;
     }
 
     private void printStatus() {
@@ -42,6 +52,7 @@ public class TwentyMatchesTheGame {
         numberOfMatchesOnTable -= currentAIMove;
     }
 
+    // метод делает 2 действия + название неконсистентно с ходом компьютера
     private void playerInput() {
         System.out.print(" - Ход Игрока. Введите количество спичек: ");
         int playerMove;
